@@ -1,0 +1,29 @@
+name: Run Rfam SQL Query
+
+# Запускается при изменении SQL-скрипта
+on:
+  push:
+    paths:
+      - 'sql/rfam_query.sql'
+
+jobs:
+  query:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Клонируем репозиторий
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Устанавливаем mysql-client
+      - name: Install MySQL client
+        run: sudo apt-get install -y mysql-client
+
+      # Запускаем SQL-скрипт и выводим результат
+      - name: Run SQL query
+        run: |
+          mysql --user rfamro \
+                --host mysql-rfam-public.ebi.ac.uk \
+                --port 4497 \
+                --database Rfam \
+                < sql/rfam_query.sql
